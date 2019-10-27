@@ -1,6 +1,6 @@
-package com.akulinski.crimetivity.pointsaftyservice.config;
+package com.akulinski.crimetivitystoreservice.config;
 
-import com.akulinski.crimetivity.pointsaftyservice.core.domain.DataLoadedResponse;
+import com.akulinski.crimetivitystoreservice.core.domain.LoadDataRequest;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +28,7 @@ public class KafkaConsumerConfig {
 
 
     @Bean
-    public ConsumerFactory consumerFactory(){
+    public ConsumerFactory consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -40,23 +40,22 @@ public class KafkaConsumerConfig {
         DefaultJackson2JavaTypeMapper typeMapper = new DefaultJackson2JavaTypeMapper();
 
         Map<String, Class<?>> classMap = new HashMap<>();
-        classMap.put("b.event.Operation", DataLoadedResponse.class);
+        classMap.put("b.event.Operation", LoadDataRequest.class);
         typeMapper.setIdClassMapping(classMap);
 
         typeMapper.addTrustedPackages("*");
 
-        JsonDeserializer<DataLoadedResponse> valueDeserializer = new JsonDeserializer<>(DataLoadedResponse.class);
+        JsonDeserializer<LoadDataRequest> valueDeserializer = new JsonDeserializer<>(LoadDataRequest.class);
         valueDeserializer.setTypeMapper(typeMapper);
         valueDeserializer.setUseTypeMapperForKey(true);
-
 
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), valueDeserializer);
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, DataLoadedResponse> containerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, LoadDataRequest> containerFactory() {
 
-        ConcurrentKafkaListenerContainerFactory<String, DataLoadedResponse> factory =
+        ConcurrentKafkaListenerContainerFactory<String, LoadDataRequest> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;

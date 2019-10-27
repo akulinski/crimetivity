@@ -32,11 +32,11 @@ public class CrimeEventMock {
     public void mockCrimeEvent() {
         Stream.generate(()->{
             CrimeEvent crimeEvent = new CrimeEvent();
-            crimeEvent.setCity(faker.country().capital());
+            crimeEvent.setCity("krakow");
             crimeEvent.setCrimeType(CrimeType.ROBBERY);
             crimeEvent.setLongitude(BigDecimal.valueOf(secureRandom.nextInt(1000)));
             crimeEvent.setLatitude(BigDecimal.valueOf(secureRandom.nextInt(1000)));
             return crimeEvent;
-        }).limit(100).forEach(crimeEvent -> crimeEventRepository.save(crimeEvent).subscribe());
+        }).limit(1000).forEach(crimeEvent -> crimeEventRepository.save(crimeEvent).subscribe());
     }
 }

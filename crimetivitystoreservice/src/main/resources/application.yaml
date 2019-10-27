@@ -18,3 +18,8 @@ spring:
 
       host: localhost
       port: 8500
+
+
+kafka:
+  bootstrapAddress: localhost:9092
+  groupId: crtimestoreservice

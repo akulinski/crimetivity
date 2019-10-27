@@ -1,4 +1,4 @@
-package com.akulinski.crimetivity.pointsaftyservice.core.domain;
+package com.akulinski.crimetivitystoreservice.core.domain;
 
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
