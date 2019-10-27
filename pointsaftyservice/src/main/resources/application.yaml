@@ -1,0 +1,27 @@
+
+server:
+  port: 0
+
+spring:
+  application:
+    name: pointsaftyservice
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017
+      database: pointsaftyservice
+      repositories:
+        type: auto
+
+  cloud:
+    consul:
+      discovery:
+        instanceId: ${spring.application.name}:${random.value}
+
+      host: localhost
+      port: 8500
+
+
+kafka:
+  bootstrapAddress: localhost:9092
+  groupId: pointsaftyservice

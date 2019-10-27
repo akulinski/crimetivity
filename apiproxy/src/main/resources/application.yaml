@@ -1,0 +1,31 @@
+
+spring:
+  application:
+    name: apiproxy
+
+  cloud:
+    consul:
+      discovery:
+        instanceId: ${spring.application.name}:${random.value}
+
+      host: localhost
+      port: 8500
+
+
+zuul:
+  routes:
+    citylocation:
+      path: /citylcoationservice/**
+      serviceId: citylcoationservice
+      strip-prefix: true
+
+
+    crimestoreservice:
+      path: /crimestoreservice/**
+      serviceId: crimestoreservice
+      strip-prefix: true
+
+    pointsaftyservice:
+      path: /pointsafty/**
+      serviceId: pointsaftyservice
+      strip-prefix: true
