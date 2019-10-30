@@ -29,3 +29,8 @@ zuul:
       path: /pointsafty/**
       serviceId: pointsaftyservice
       strip-prefix: true
+
+    eventfiltering:
+      path: /filter/**
+      serviceid: crimefilteringservice
+      strip-prefix: true

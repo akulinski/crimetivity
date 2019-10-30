@@ -18,7 +18,7 @@ public class DataLoaderService {
         this.loadDataRequestRepository = loadDataRequestRepository;
     }
 
-    public String sendDataRequest(String city, String lat, String lon){
+    public String sendDataRequest(String city, String lat, String lon) {
         LoadDataRequest loadDataRequest = new LoadDataRequest();
         loadDataRequest.setCityName(city);
         loadDataRequest.setLat(lat);
