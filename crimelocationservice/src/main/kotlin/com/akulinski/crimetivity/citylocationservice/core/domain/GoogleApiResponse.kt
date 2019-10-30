@@ -7,4 +7,6 @@ data class GoogleApiResponse(
         val plus_code: PlusCode,
         val results: List<Result>,
         val status: String
-): Serializable
+): Serializable{
+    constructor(): this(PlusCode(), emptyList(), "")
+}

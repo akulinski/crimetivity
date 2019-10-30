@@ -5,4 +5,6 @@ import java.io.Serializable
 data class PlusCode(
     val compound_code: String,
     val global_code: String
-): Serializable
+): Serializable{
+    constructor(): this("","")
+}
