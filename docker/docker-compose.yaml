@@ -1,10 +1,18 @@
 version: '2'
 
 services:
+
   crimetivitystoreservoice-mongodb:
-    extends:
-      service: crimetivitystoreservoice-mongodb
-      file: mongo.yaml
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./mongodbdata/:/data/db/
+
+  pointsaftyservice-mongodb:
+    image: mongo:latest
+    volumes:
+      - ./pointsaftyservice/:/data/db/
 
   redis:
     extends:
@@ -29,7 +37,10 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     ports:
       - "9092:9092"
-
+  kafka-manager:
+    extends:
+      service: kafka-manager
+      file: ./kafka-docker/docker-compose-single-broker.yml
   consul:
     extends:
       service: consul
@@ -69,6 +80,10 @@ services:
 
   crimetivity-crimestoreservice:
     image: docker.pkg.github.com/akulinski/crimetivity/crimetivitystoreservice:0.0.1-snapshot
+    links:
+      - crimetivitystoreservoice-mongodb
+    depends_on:
+      - crimetivitystoreservoice-mongodb
     environment:
       - SPRING_CLOUD_CONSUL_HOST=consul
       - SPRING_CLOUD_CONSUL_PORT=8500
@@ -77,6 +92,22 @@ services:
 
   crimetivity-crimefilteringservice:
     image: docker.pkg.github.com/akulinski/crimetivity/crimefilteringservice:0.0.1-snapshot
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_PORT=8500
+
+  crimetivity-pointsaftyservice:
+    image: docker.pkg.github.com/akulinski/crimetivity/pointsaftyservice:0.0.1-snapshot
+    links:
+      - pointsaftyservice-mongodb
+    depends_on:
+      - pointsaftyservice-mongodb
+    environment:
+      - SPRING_ZIPKIN_BASEURL=http://zipkin:9411
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_PORT=8500
+      - SPRING_DATA_MONGODB_URI=mongodb://pointsaftyservice-mongodb:27017
+      - KAFKA_BOOTSTRAPADDRESS=kafka:9092
 
 volumes:
   consul_data:
