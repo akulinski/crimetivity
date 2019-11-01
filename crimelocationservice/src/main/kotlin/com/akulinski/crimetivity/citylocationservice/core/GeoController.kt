@@ -15,6 +15,8 @@ class GeoController(val geoClient: GeoClient, @Value("\${google.maps.apiKey}") v
     @GetMapping
     fun findLocation(@Param("lat") lat: String, @Param("lon") lon: String): ResponseEntity<GoogleApiResponse> {
         val mapOf = mapOf(Pair("latlng", "$lat,$lon"), Pair("key", key))
-        return ResponseEntity.ok(geoClient.getGeoData(mapOf))
+        val response = geoClient.getGeoData(mapOf)
+
+        return ResponseEntity.ok(response)
     }
 }

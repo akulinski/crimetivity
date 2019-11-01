@@ -37,8 +37,6 @@ services:
       - 9411:9411
       # Uncomment if you set SCRIBE_ENABLED=true
       # - 9410:9410
-    depends_on:
-      - storage
 
   # Adds a cron to process spans since midnight every hour, and all spans each day
   # This data is served by http://192.168.99.100:8080/dependency

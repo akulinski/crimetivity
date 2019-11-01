@@ -1,0 +1,83 @@
+version: '2'
+
+services:
+  crimetivitystoreservoice-mongodb:
+    extends:
+      service: crimetivitystoreservoice-mongodb
+      file: mongo.yaml
+
+  redis:
+    extends:
+      service: redis
+      file: redis.yaml
+
+
+  zookeeper:
+    extends:
+      service: zookeeper
+      file: ./kafka-docker/docker-compose-single-broker.yml
+    ports:
+      - "2181:2181"
+
+  kafka:
+    extends:
+      service: kafka
+      file: ./kafka-docker/docker-compose-single-broker.yml
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_CREATE_TOPICS: "DATA_REQUESTS:1:1,DATA_LOADS:1:1,LOAD_DATA_REQUESTS:1:1"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    ports:
+      - "9092:9092"
+
+  consul:
+    extends:
+      service: consul
+      file: consul.yaml
+    ports:
+      - "8500:8500"
+
+  storage:
+    extends:
+      service: storage
+      file: docker-zipkin.yaml
+
+  zipkin:
+    extends:
+      service: zipkin
+      file: docker-zipkin.yaml
+    depends_on:
+      - storage
+
+  crimetivity-apiproxy:
+    image: docker.pkg.github.com/akulinski/crimetivity/apiproxy:0.0.1-snapshot
+    environment:
+      - SPRING_ZIPKIN_BASEURL=http://zipkin:9411
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_PORT=8500
+    ports:
+      - '8080:8080'
+
+
+  crimetivity-citylocationservice:
+    image: docker.pkg.github.com/akulinski/crimetivity/citylocationservice:0.0.2-snapshot
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_PORT=8500
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+
+  crimetivity-crimestoreservice:
+    image: docker.pkg.github.com/akulinski/crimetivity/crimetivitystoreservice:0.0.1-snapshot
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_PORT=8500
+      - SPRING_DATA_MONGODB_URI=mongodb://crimetivitystoreservoice-mongodb:27017
+      - KAFKA_BOOTSTRAPADDRESS=kafka:9092
+
+  crimetivity-crimefilteringservice:
+    image: docker.pkg.github.com/akulinski/crimetivity/crimefilteringservice:0.0.1-snapshot
+
+volumes:
+  consul_data:
+    driver: local

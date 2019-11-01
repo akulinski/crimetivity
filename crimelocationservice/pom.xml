@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.akulinski.crimetivity</groupId>
 	<artifactId>citylocationservice</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>citylocationservice</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -82,18 +82,27 @@
 		<dependency>
 			<groupId>io.github.openfeign</groupId>
 			<artifactId>feign-okhttp</artifactId>
-			<version>9.3.1</version>
+			<version>10.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.openfeign</groupId>
 			<artifactId>feign-gson</artifactId>
-			<version>9.3.1</version>
+			<version>10.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.openfeign</groupId>
 			<artifactId>feign-slf4j</artifactId>
-			<version>9.3.1</version>
+			<version>10.4.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>

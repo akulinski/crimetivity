@@ -6,7 +6,13 @@ google:
 server:
   port: 0
 
+
+logging:
+  level:
+    root: DEBUG
+
 spring:
+
   application:
     name: citylcoationservice
   redis:
