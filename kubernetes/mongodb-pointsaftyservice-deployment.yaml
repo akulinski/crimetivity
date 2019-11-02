@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pointsaftyservice-mongodb
+  labels:
+    app: pointsaftyservice
+spec:
+  ports:
+    - port: 27017
+  selector:
+    app: pointsaftyservice-mongodb
+    tier: pointsafty
+  clusterIP: None
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pointsaftyservice-pv-claim
+  labels:
+    app: pointsaftyservice
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: pointsaftyservice-mongodb
+  labels:
+    app: pointsaftyservice
+spec:
+  selector:
+    matchLabels:
+      app: pointsaftyservice-mongodb
+      tier: pointsafty
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: pointsaftyservice-mongodb
+        tier: pointsafty
+    spec:
+      containers:
+        - image: mongo:latest
+          name: pointsaftyservice-mongodb
+
+          ports:
+            - containerPort: 27017
+              name: mongodb
+          volumeMounts:
+            - name: pointsaftyservice-mongodb-persistent-storage
+              mountPath: /data/db/
+      volumes:
+        - name: pointsaftyservice-mongodb-persistent-storage
+          persistentVolumeClaim:
+            claimName: pointsaftyservice-pv-claim

@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-citylocationservice
+  labels:
+    app: citylocationservice
+spec:
+  ports:
+    - port: 6379
+  selector:
+    app: redis-citylocationservice
+    tier: citylocationservice
+  clusterIP: None
+
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: redis-citylocationservice
+  labels:
+    app: citylocationservice
+spec:
+  selector:
+    matchLabels:
+      app: redis-citylocationservice
+      tier: citylocationservice
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: redis-citylocationservice
+        tier: citylocationservice
+    spec:
+      containers:
+        - image: bitnami/redis:latest
+          name: redis-citylocationservice
+          env:
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
+          ports:
+            - containerPort: 6379
+              name: redis

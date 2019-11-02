@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+  labels:
+    app: kafka-cluster
+spec:
+  ports:
+    - port: 6379
+  selector:
+    app: zookeeper
+    tier: kafka-cluster
+  clusterIP: None
+
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: zookeeper
+  labels:
+    app: kafka-cluster
+spec:
+  selector:
+    matchLabels:
+      app: zookeeper
+      tier: kafka-cluster
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+        tier: kafka-cluster
+    spec:
+      containers:
+        - image: wurstmeister/zookeeper
+          name: zookeeper
+          ports:
+            - containerPort: 2181
+              name: zookeeper

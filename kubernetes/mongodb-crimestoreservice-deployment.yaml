@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: crimestoreservice-mongodb
+  labels:
+    app: crimestoreservice
+spec:
+  ports:
+    - port: 27017
+  selector:
+    app: crimestoreservice-mongodb
+    tier: crimestore
+  clusterIP: None
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: crimestoreservice-pv-claim
+  labels:
+    app: crimestoreservice
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: crimestoreservice-mongodb
+  labels:
+    app: crimestoreservice
+spec:
+  selector:
+    matchLabels:
+      app: crimestoreservice-mongodb
+      tier: crimestore
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: crimestoreservice-mongodb
+        tier: crimestore
+    spec:
+      containers:
+        - image: mongo:latest
+          name: crimestoreservice-mongodb
+
+          ports:
+            - containerPort: 27017
+              name: mongodb
+          volumeMounts:
+            - name: crimestoreservice-mongodb-persistent-storage
+              mountPath: /data/db/
+      volumes:
+        - name: crimestoreservice-mongodb-persistent-storage
+          persistentVolumeClaim:
+            claimName: crimestoreservice-pv-claim
