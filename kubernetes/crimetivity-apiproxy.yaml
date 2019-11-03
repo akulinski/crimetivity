@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: api-proxy
+  labels:
+    app: crimetivity
+spec:
+  selector:
+    matchLabels:
+      app: api-proxy
+      tier: crimetivity
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: api-proxy
+        tier: crimetivity
+    spec:
+      containers:
+        - image: docker.pkg.github.com/akulinski/crimetivity/apiproxy:0.0.4-snapshot-kb
+          name: api-proxy
+          env:
+            - name: SPRING_ZIPKIN_BASEURL
+              value: "http://zipkin:9411"
+          ports:
+            - containerPort: 8080
+              name: api-proxy
+
+      imagePullSecrets:
+        - name: regcred

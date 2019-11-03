@@ -27,11 +27,4 @@ spring:
     password:
     port: 6379
 
-  cloud:
-    consul:
-      discovery:
-        instanceId: ${spring.application.name}:${random.value}
-
-      host: localhost
-      port: 8500
 

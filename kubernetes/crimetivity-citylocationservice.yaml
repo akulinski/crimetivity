@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: citylcoationservice
+  labels:
+    app: crimetivity
+spec:
+  selector:
+    matchLabels:
+      app: citylcoationservice
+      tier: crimetivity
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: citylcoationservice
+        tier: crimetivity
+    spec:
+      containers:
+        - image: docker.pkg.github.com/akulinski/crimetivity/citylocationservice:0.0.5-snapshot-kb
+          name: api-proxy
+          env:
+            - name: SPRING_REDIS_HOST
+              value: "redis-citylocationservice"
+            - name: SPRING_ZIPKIN_BASEURL
+              value: "http://zipkin:9411"
+            - name: SERVER_PORT
+              value: "8080"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+      imagePullSecrets:
+        - name: regcred

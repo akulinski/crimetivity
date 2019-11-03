@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zipkin-mysql
+  labels:
+    app: zipkin
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: zipkin-mysql
+    tier: zipkin
+  clusterIP: None
+
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: zipkin-mysql
+  labels:
+    app: zipkin-mysql
+spec:
+  selector:
+    matchLabels:
+      app: zipkin-mysql
+      tier: zipkin
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: zipkin-mysql
+        tier: zipkin
+    spec:
+      containers:
+        - image: openzipkin/zipkin-mysql
+          name: zipkin-mysql
+
+          ports:
+            - containerPort: 3306
+              name: zipkin-mysql
