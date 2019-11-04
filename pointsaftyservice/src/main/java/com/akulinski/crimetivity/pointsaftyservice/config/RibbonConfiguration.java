@@ -15,4 +15,5 @@ public class RibbonConfiguration {
     public IRule loadBlancingRule() {
         return new RoundRobinRule();
     }
+
 }

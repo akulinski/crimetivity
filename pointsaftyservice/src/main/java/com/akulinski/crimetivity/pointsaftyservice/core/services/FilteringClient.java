@@ -13,6 +13,6 @@ import java.util.List;
 @FeignClient(name = "crimefilteringservice", configuration = FeignConfiguration.class, fallback = FilterFallback.class)
 public interface FilteringClient {
 
-    @PostMapping(path = "api/v1/filter")
+    @PostMapping(path = "/api/v1/filter")
     List<CrimeEvent> filter(@RequestBody FilteringRequest filteringRequest);
 }

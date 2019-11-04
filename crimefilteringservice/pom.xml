@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.akulinski.crimetivity</groupId>
 	<artifactId>crimefilteringservice</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT-kb</version>
 	<name>crimefilteringservice</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -21,10 +21,10 @@
 
 	<profiles>
 		<profile>
-			<id>consul</id>
+			<id>kubernetes</id>
 			<activation>
 				<property>
-					<name>consul</name>
+					<name>kubernetes</name>
 				</property>
 			</activation>
 
@@ -51,10 +51,10 @@
 			</dependencies>
 		</profile>
 		<profile>
-			<id>kubernetes</id>
+			<id>consul</id>
 			<activation>
 				<property>
-					<name>kubernetes</name>
+					<name>consul</name>
 				</property>
 			</activation>
 
