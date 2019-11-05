@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -36,7 +37,7 @@ public class DataLoadedListener {
         filteringRequest.setLat(loadDataRequest.getLat());
         filteringRequest.setLon(loadDataRequest.getLon());
 
-        List<CrimeEvent> filter = filteringClient.filter(filteringRequest);
+        List<CrimeEvent> filter = filteringClient.filter(filteringRequest).toStream().collect(Collectors.toList());
 
         if (filter.size() > 0) {
             loadDataRequest.setSafetyStatus(SafetyStatus.NOT_SAFE);

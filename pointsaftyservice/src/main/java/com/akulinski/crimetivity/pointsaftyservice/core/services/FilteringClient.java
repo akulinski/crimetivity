@@ -1,18 +1,25 @@
 package com.akulinski.crimetivity.pointsaftyservice.core.services;
 
-import com.akulinski.crimetivity.pointsaftyservice.config.FeignConfiguration;
-import com.akulinski.crimetivity.pointsaftyservice.config.FilterFallback;
 import com.akulinski.crimetivity.pointsaftyservice.core.domain.CrimeEvent;
 import com.akulinski.crimetivity.pointsaftyservice.core.domain.FilteringRequest;
-import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
-import java.util.List;
 
-@FeignClient(name = "crimefilteringservice", configuration = FeignConfiguration.class, fallback = FilterFallback.class)
-public interface FilteringClient {
+@Service
+public class FilteringClient {
+    private final WebClient webClient;
+
+    public FilteringClient(){
+        webClient = WebClient.builder().baseUrl("http://crimefilteringservice:8080/api/v1/filter").build();
+    }
 
     @PostMapping(path = "/api/v1/filter")
-    List<CrimeEvent> filter(@RequestBody FilteringRequest filteringRequest);
+    Flux<CrimeEvent> filter(@RequestBody FilteringRequest filteringRequest){
+        return  webClient.post().body(BodyInserters.fromObject(filteringRequest)).retrieve().bodyToFlux(CrimeEvent.class);
+    }
 }
