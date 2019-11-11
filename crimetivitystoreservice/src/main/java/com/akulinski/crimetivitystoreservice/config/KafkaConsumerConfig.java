@@ -33,6 +33,7 @@ public class KafkaConsumerConfig {
         props.put(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 bootstrapAddress);
+        props.put("fetch.message.max.bytes", 157286400000L);
         props.put(
                 ConsumerConfig.GROUP_ID_CONFIG,
                 groupId);

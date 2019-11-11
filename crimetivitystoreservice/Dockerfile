@@ -1,4 +1,4 @@
-FROM openjdk:11-slim
+FROM openjdk:13-slim
 
 MAINTAINER albert.kulinski@hotmail.com
 

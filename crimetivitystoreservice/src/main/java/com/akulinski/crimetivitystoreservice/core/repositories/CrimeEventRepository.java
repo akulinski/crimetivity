@@ -1,9 +1,19 @@
 package com.akulinski.crimetivitystoreservice.core.repositories;
 
 import com.akulinski.crimetivitystoreservice.core.domain.CrimeEvent;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import reactor.core.publisher.Flux;
+import com.akulinski.crimetivitystoreservice.core.domain.CrimeEventPrimaryKey;
+import com.akulinski.crimetivitystoreservice.core.domain.CrimeType;
+import org.springframework.data.cassandra.repository.CassandraRepository;
 
-public interface CrimeEventRepository extends ReactiveMongoRepository<CrimeEvent, String> {
-    Flux<CrimeEvent> findByCity(String city);
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+public interface CrimeEventRepository extends CassandraRepository<CrimeEvent, CrimeEventPrimaryKey> {
+    List<CrimeEvent> findByPrimaryKey_City(String city);
+
+    List<CrimeEvent> findByPrimaryKey_CityAndPrimaryKey_CrimeTypeAndPrimaryKey_DateBetween(String city, CrimeType crimeType, Date start, Date end);
+
+    List<CrimeEvent> findByPrimaryKey_CityAndPrimaryKey_CrimeTypeInAndPrimaryKey_DateBetween(String city, Set<CrimeType> crimeType, Date start, Date end);
+
 }

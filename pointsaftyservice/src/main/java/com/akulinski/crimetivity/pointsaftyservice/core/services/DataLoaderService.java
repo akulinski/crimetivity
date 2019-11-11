@@ -1,10 +1,13 @@
 package com.akulinski.crimetivity.pointsaftyservice.core.services;
 
+import com.akulinski.crimetivity.pointsaftyservice.core.domain.CrimeType;
 import com.akulinski.crimetivity.pointsaftyservice.core.domain.LoadDataRequest;
 import com.akulinski.crimetivity.pointsaftyservice.core.domain.RequestStatus;
 import com.akulinski.crimetivity.pointsaftyservice.core.repository.LoadDataRequestRepository;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 @Service
 public class DataLoaderService {
@@ -24,6 +27,7 @@ public class DataLoaderService {
         loadDataRequest.setLat(lat);
         loadDataRequest.setLon(lon);
         loadDataRequest.setRequestStatus(RequestStatus.CREATED);
+        loadDataRequest.setCrimeTypes(Set.of(CrimeType.values()));
 
         LoadDataRequest save = loadDataRequestRepository.save(loadDataRequest);
 

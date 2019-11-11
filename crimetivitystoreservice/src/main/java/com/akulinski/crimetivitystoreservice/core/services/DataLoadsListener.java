@@ -15,6 +15,6 @@ public class DataLoadsListener {
 
     @KafkaListener(topics = "LOAD_DATA_REQUESTS", groupId = "pointsaftyservice", containerFactory = "containerFactory")
     public void listen(LoadDataRequest loadDataRequest) {
-        dataLoadedService.sendCrimeData(loadDataRequest.getCityName(), loadDataRequest.getId());
+        dataLoadedService.sendCrimeData(loadDataRequest.getCityName(), loadDataRequest.getId(), loadDataRequest.getCrimeTypes(), loadDataRequest.getFrom(), loadDataRequest.getTo());
     }
 }

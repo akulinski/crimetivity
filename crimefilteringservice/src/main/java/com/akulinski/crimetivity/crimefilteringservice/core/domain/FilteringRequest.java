@@ -3,6 +3,7 @@ package com.akulinski.crimetivity.crimefilteringservice.core.domain;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -16,4 +17,7 @@ public class FilteringRequest implements Serializable {
 
     private List<CrimeEvent> crimeEvents;
 
+    private Date beg;
+
+    private Date end;
 }

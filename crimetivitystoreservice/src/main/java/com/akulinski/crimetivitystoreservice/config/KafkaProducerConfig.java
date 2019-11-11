@@ -34,6 +34,8 @@ public class KafkaProducerConfig {
         configProps.put(
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                 JsonSerializer.class);
+        configProps.put("replica.fetch.max.bytes", 157286400000L);
+        configProps.put("message.max.bytes", 157286400000L);
 
         return new DefaultKafkaProducerFactory<>(configProps);
     }

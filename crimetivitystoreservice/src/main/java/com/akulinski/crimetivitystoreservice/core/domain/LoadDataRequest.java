@@ -1,12 +1,12 @@
 package com.akulinski.crimetivitystoreservice.core.domain;
 
 import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.Set;
 
 @Data
-@Document
 public class LoadDataRequest implements Serializable {
 
     private String id;
@@ -16,6 +16,12 @@ public class LoadDataRequest implements Serializable {
     private String lat;
 
     private String lon;
+
+    private Instant from;
+
+    private Set<CrimeType> crimeTypes;
+
+    private Instant to;
 
     private SafetyStatus safetyStatus;
 

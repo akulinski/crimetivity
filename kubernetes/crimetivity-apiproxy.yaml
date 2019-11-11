@@ -24,6 +24,11 @@ spec:
           env:
             - name: SPRING_ZIPKIN_BASEURL
               value: "http://zipkin:9411"
+            - name: HYSTERIX_COMMAND_DEFAULT_EXECUTION_ISOLATION_THREAD_TIMEOUTINMILLISECONDS
+              value: "5000"
+            - name: RIBBON_READTIMEOUT
+              value: "5000"
+
           ports:
             - containerPort: 8080
               name: api-proxy

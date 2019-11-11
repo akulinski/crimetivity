@@ -1,24 +1,34 @@
 package com.akulinski.crimetivitystoreservice.core.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.NoArgsConstructor;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
-@Document
 @Data
+@Table("crime_event")
+@AllArgsConstructor
+@NoArgsConstructor
 public class CrimeEvent {
 
-    @Id
-    private String id;
+    @PrimaryKey
+    private CrimeEventPrimaryKey primaryKey;
 
-    private String city;
-
+    @Column
     private BigDecimal longitude;
 
+    @Column
     private BigDecimal latitude;
 
-    private CrimeType crimeType;
 
+    public CrimeEvent(String city, BigDecimal longitude, BigDecimal latitude, CrimeType crimeType, Date date) {
+        this.primaryKey = new CrimeEventPrimaryKey(city, crimeType, date);
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
 }

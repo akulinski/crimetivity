@@ -2,23 +2,22 @@ package com.akulinski.crimetivitystoreservice.web.rest.v1;
 
 import com.akulinski.crimetivitystoreservice.core.domain.CrimeEvent;
 import com.akulinski.crimetivitystoreservice.core.domain.dto.CrimeEventDTO;
+import com.akulinski.crimetivitystoreservice.core.domain.dto.GetCrimesBetweenDatesDTO;
 import com.akulinski.crimetivitystoreservice.core.domain.dto.GetEventsByRadiusDTO;
-import com.akulinski.crimetivitystoreservice.core.repositories.CrimeEventRepository;
 import com.akulinski.crimetivitystoreservice.core.services.CrimeEventsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/crimes")
 public class CrimeEventsController {
 
-    private CrimeEventRepository crimeEventRepository;
 
     private CrimeEventsService crimeEventsService;
 
-    public CrimeEventsController(CrimeEventRepository crimeEventRepository, CrimeEventsService crimeEventsService) {
-        this.crimeEventRepository = crimeEventRepository;
+    public CrimeEventsController(CrimeEventsService crimeEventsService) {
         this.crimeEventsService = crimeEventsService;
     }
 
@@ -28,17 +27,18 @@ public class CrimeEventsController {
     }
 
     @GetMapping("/city/{cityName}")
-    public Flux<CrimeEvent> getCrimesInCity(@PathVariable("cityName") String cityName) {
-        return crimeEventsService.getAllCrimesInCity(cityName);
+    public ResponseEntity<List<CrimeEvent>> getCrimesInCity(@PathVariable("cityName") String cityName) {
+        return ResponseEntity.ok(crimeEventsService.getAllCrimesInCity(cityName));
     }
 
     @PostMapping("/radius")
-    public Flux<CrimeEvent> getCrimesInRadius(@RequestBody GetEventsByRadiusDTO getEventsByRadiusDTO) {
-        return crimeEventsService.getAllCrimesInRadius(getEventsByRadiusDTO);
+    public ResponseEntity<List<CrimeEvent>> getCrimesInRadius(@RequestBody GetEventsByRadiusDTO getEventsByRadiusDTO) {
+        return ResponseEntity.ok(crimeEventsService.getAllCrimesInRadius(getEventsByRadiusDTO));
     }
 
-    @GetMapping
-    public Flux<CrimeEvent> findAll() {
-        return crimeEventRepository.findAll();
+    @PostMapping("/date")
+    public ResponseEntity<List<CrimeEvent>> getCrimesBetweenDates(@RequestBody GetCrimesBetweenDatesDTO crimesBetweenDatesDTO) {
+        return ResponseEntity.ok(crimeEventsService.getCrimesBetweenDates(crimesBetweenDatesDTO));
     }
+
 }

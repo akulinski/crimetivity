@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 public class FilteringService {
 
     public List<CrimeEvent> filterEvents(FilteringRequest filteringRequest){
-        return filteringRequest.getCrimeEvents().stream().skip(3).collect(Collectors.toList());
+
+        return filteringRequest.getCrimeEvents().stream()
+                .filter(crimeEvent -> crimeEvent.getDate().before(filteringRequest.getEnd()) && crimeEvent.getDate().after(filteringRequest.getEnd()))
+                .collect(Collectors.toList());
     }
 }

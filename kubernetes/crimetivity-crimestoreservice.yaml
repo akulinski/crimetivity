@@ -32,17 +32,29 @@ spec:
         tier: crimetivity
     spec:
       containers:
-        - image: docker.pkg.github.com/akulinski/crimetivity/crimetivitystoreservice:0.0.2-SNAPSHOT-kb
-          name: api-proxy
+        - image: docker.pkg.github.com/akulinski/crimetivity/crimetivitystoreservice:0.0.5-SNAPSHOT
+          name: crime-store
           env:
-            - name: SPRING_DATA_MONGODB_URI
-              value: "mongodb://crimestoreservice-mongodb:27017"
+            - name: SPRING_DATA_CASSANDRA_CONTACT-POINTS
+              value: fair-uakari-cassandra
+            - name: SPRING_DATA_CASSANDRA_USERNAME
+              value: cassandra
+            - name: SPRING_DATA_CASSANDRA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: cassandra-password
+                  name: fair-uakari-cassandra
+
             - name: KAFKA_BOOTSTRAPADDRESS
               value: "kafka:9092"
             - name: SPRING_ZIPKIN_BASEURL
               value: "http://zipkin:9411"
             - name: SERVER_PORT
               value: "8080"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "mock-data"
+            - name: MOCK_COUNT
+              value: "100"
           readinessProbe:
             httpGet:
               path: /actuator/health

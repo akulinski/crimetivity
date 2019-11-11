@@ -1,15 +1,18 @@
 package com.akulinski.crimetivitystoreservice.core.services;
 
 import com.akulinski.crimetivitystoreservice.core.domain.CrimeEvent;
+import com.akulinski.crimetivitystoreservice.core.domain.CrimeEventPrimaryKey;
 import com.akulinski.crimetivitystoreservice.core.domain.dto.CrimeEventDTO;
+import com.akulinski.crimetivitystoreservice.core.domain.dto.GetCrimesBetweenDatesDTO;
 import com.akulinski.crimetivitystoreservice.core.domain.dto.GetEventsByRadiusDTO;
 import com.akulinski.crimetivitystoreservice.core.repositories.CrimeEventRepository;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CrimeEventsService {
@@ -20,26 +23,30 @@ public class CrimeEventsService {
         this.crimeEventRepository = crimeEventRepository;
     }
 
-    public Mono<CrimeEvent> createCrimeEvent(CrimeEventDTO crimeEventDTO) {
+    public CrimeEvent createCrimeEvent(CrimeEventDTO crimeEventDTO) {
         CrimeEvent crimeEvent = new CrimeEvent();
-        crimeEvent.setCity(crimeEventDTO.getCity().toLowerCase());
-        crimeEvent.setCrimeType(crimeEventDTO.getCrimeType());
+        CrimeEventPrimaryKey crimeEventPrimaryKey = new CrimeEventPrimaryKey(crimeEventDTO.getCity(), crimeEventDTO.getCrimeType(), new java.util.Date());
+        crimeEvent.setPrimaryKey(crimeEventPrimaryKey);
         crimeEvent.setLatitude(crimeEvent.getLatitude());
         crimeEvent.setLongitude(crimeEvent.getLongitude());
 
         return crimeEventRepository.save(crimeEvent);
     }
 
-    public Flux<CrimeEvent> getAllCrimesInCity(String city) {
-        return crimeEventRepository.findByCity(city.toLowerCase());
+    public List<CrimeEvent> getAllCrimesInCity(String city) {
+        return crimeEventRepository.findByPrimaryKey_City(city.toLowerCase());
     }
 
-    public Flux<CrimeEvent> getAllCrimesInRadius(GetEventsByRadiusDTO getEventsByRadiusDTO) {
+    public List<CrimeEvent> getCrimesBetweenDates(GetCrimesBetweenDatesDTO getCrimesBetweenDatesDTO) {
+        return crimeEventRepository.findByPrimaryKey_CityAndPrimaryKey_CrimeTypeAndPrimaryKey_DateBetween(getCrimesBetweenDatesDTO.getCity(), getCrimesBetweenDatesDTO.getCrimeType(), Date.from(getCrimesBetweenDatesDTO.getFrom()), Date.from(getCrimesBetweenDatesDTO.getTo()));
+    }
 
-        return crimeEventRepository.findByCity(getEventsByRadiusDTO.getCity().toLowerCase()).filter(data -> {
+    public List<CrimeEvent> getAllCrimesInRadius(GetEventsByRadiusDTO getEventsByRadiusDTO) {
+
+        return crimeEventRepository.findByPrimaryKey_City(getEventsByRadiusDTO.getCity().toLowerCase()).stream().filter(data -> {
             double distance = getDistance(getEventsByRadiusDTO, data);
             return distance <= getEventsByRadiusDTO.getRadius();
-        });
+        }).collect(Collectors.toList());
     }
 
     private double getDistance(GetEventsByRadiusDTO getEventsByRadiusDTO, CrimeEvent data) {

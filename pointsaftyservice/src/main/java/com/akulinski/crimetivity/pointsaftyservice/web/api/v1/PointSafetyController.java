@@ -6,6 +6,7 @@ import com.akulinski.crimetivity.pointsaftyservice.web.CheckDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 
 @RestController
@@ -27,9 +28,9 @@ public class PointSafetyController {
     }
 
     @PostMapping("/create-check-job")
-    public ResponseEntity createCheckJob(@RequestBody CheckDTO checkDTO){
-
-        URI uri = URI.create(loaderService.sendDataRequest(checkDTO.getCity(), checkDTO.getLat(), checkDTO.getLon()));
+    public ResponseEntity createCheckJob(@RequestBody CheckDTO checkDTO, HttpServletRequest httpRequest){
+        var apiRequest = httpRequest.getRequestURI().substring(0, httpRequest.getRequestURI().indexOf("create-check-job"));
+        URI uri = URI.create(apiRequest+loaderService.sendDataRequest(checkDTO.getCity(), checkDTO.getLat(), checkDTO.getLon()));
         return ResponseEntity.created(uri).build();
     }
 }
