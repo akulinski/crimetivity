@@ -1,7 +1,7 @@
 google:
   maps:
     url: https://maps.googleapis.com/maps/api/geocode
-    apiKey: AIzaSyD1bGMYE_p7IodXLjvCssk30_4hY-D83PM
+    apiKey: ${API_TOKEN}
 
 server:
   port: 0
